@@ -1,0 +1,19 @@
+{
+  "ultima_consulta_cpf": "2019-12-04",
+  "movimentacoes_financeiras": [
+    {
+      "nome": "Cartões",
+      "valor": 3000
+    },
+    {
+      "nome": "Transferências Bancárias",
+      "valor": 2000
+    }
+  ],
+  "dados_ultima_compra_cartao_credito": {
+    "bandeira": "Mastercard",
+    "numero": "5555666677778884",
+    "vencimento": "12/2022",
+    "valor": 1000
+  }
+}
