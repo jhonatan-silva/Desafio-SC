@@ -18,7 +18,7 @@ services:
     links:
     - php
     ports:
-    - "81:80"
+    - "81:81"
     depends_on:
     - db
 
@@ -27,11 +27,11 @@ services:
     build: images/php
     volumes:
     - ./lumen:/var/www/html
-    working_dir: /var/www/html/app/public
+    working_dir: /var/www/html
     command: php-fpm
     links:
     - db:db
     ports:
-    - "9001:9000"
+    - "9001:9001"
     depends_on:
     - db

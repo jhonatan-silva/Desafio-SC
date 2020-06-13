@@ -1,9 +1,22 @@
 # Desafio SC
 
-Inicie os containers
-
+- Inicie os containers
 ```
 docker-compose up --build -d
 ```
 
-[Acesse o link](http://127.0.0.1:81)
+- Entre no container php
+
+```
+docker exec -it php sh
+```
+
+- Crie as tabelas
+```
+php artisan migrate
+```
+
+- Acesse o link
+```
+http://127.0.0.1:81
+```
