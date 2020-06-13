@@ -12,7 +12,7 @@
   },
   "lista_de_dividas": [
     {
-      "nome": "Cartões",
+      "descricao": "Cartões",
       "valor": 1200
     }
   ]

@@ -2,11 +2,11 @@
   "ultima_consulta_cpf": "2019-12-04",
   "movimentacoes_financeiras": [
     {
-      "nome": "Cartões",
+      "descricao": "Cartões",
       "valor": 3000
     },
     {
-      "nome": "Transferências Bancárias",
+      "descricao": "Transferências Bancárias",
       "valor": 2000
     }
   ],

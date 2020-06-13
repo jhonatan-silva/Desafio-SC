@@ -2,30 +2,28 @@
   "idade": 38,
   "lista_de_bens": [
     {
-      "nome": "Casa",
+      "descricao": "Casa",
       "valor": 400000
     },
     {
-      "nome": "Carro",
+      "descricao": "Carro",
       "valor": 35000
     }
   ],
   "endereco": {
     "cep": "01001000",
     "logradouro": "Praça da Sé",
-    "numero": "1854",
-    "complemento": "lado ímpar",
     "bairro": "Sé",
     "cidade": "São Paulo",
     "uf": "SP"
   },
   "fontes_de_renda": [
     {
-      "nome": "Salário",
+      "descricao": "Salário",
       "valor": 7000
     },
     {
-      "nome": "Dividendos",
+      "descricao": "Dividendos",
       "valor": 1000
     }
   ]
