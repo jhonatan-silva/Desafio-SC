@@ -20,7 +20,7 @@ class CreateUsuariosTable extends Migration
             $table->string('nome');
             $table->integer('idade');
             $table->string('cpf');
-            $table->date('ultima_consulta_cpf')->nullable();
+            $table->dateTime('ultima_consulta_cpf')->nullable();
             $table->timestamps();
 
             $table->foreign('endereco_id')

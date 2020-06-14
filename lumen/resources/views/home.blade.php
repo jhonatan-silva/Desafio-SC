@@ -16,7 +16,11 @@
         <table id="datatable" class="display" style="width:100%">
             <thead>
             <tr>
-                <th>Nome</th>
+                <th>NOME</th>
+                <th>CPF</th>
+                <th>Idade</th>
+                <th>Última consulta CPF</th>
+                <th>Última sincronização</th>
                 <th width="5%">Ações</th>
             </tr>
             </thead>
@@ -24,6 +28,10 @@
             @foreach($usuarios as $usuario)
                 <tr>
                     <td>{{ $usuario->nome }}</td>
+                    <td>{{ $usuario->cpf }}</td>
+                    <td>{{ $usuario->idade }}</td>
+                    <td>{{ $usuario->ultima_consulta_cpf ? $usuario->ultima_consulta_cpf->format('d/m/Y H:i') : ''}}</td>
+                    <td>{{ $usuario->updated_at->format('d/m/Y H:i') }}</td>
                     <td>
                         <button type="button" class="btn btn-primary">
                             <i class="fa fa-eye" aria-hidden="true"></i>

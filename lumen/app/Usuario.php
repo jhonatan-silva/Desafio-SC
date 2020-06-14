@@ -13,7 +13,11 @@ class Usuario extends Model
 
 
     public $fillable = [
-        'nome'
+        'endereco_id',
+        'nome',
+        'idade',
+        'cpf',
+        'ultima_consulta_cpf'
     ];
 
     /**
@@ -23,6 +27,10 @@ class Usuario extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'nome' => 'string'
+        'endereco_id' => 'integer',
+        'nome' => 'string',
+        'idade' => 'integer',
+        'cpf' => 'string',
+        'ultima_consulta_cpf' => 'dateTime'
     ];
 }
