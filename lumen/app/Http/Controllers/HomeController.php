@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use App\Usuario;
 
 class HomeController extends Controller
 {
@@ -19,6 +18,8 @@ class HomeController extends Controller
 
     public function index()
     {
-        return 'Home';
+        $usuarios = Usuario::get();
+
+        return view('home', compact('usuarios'));
     }
 }
