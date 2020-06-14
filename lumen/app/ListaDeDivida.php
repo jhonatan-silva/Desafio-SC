@@ -18,14 +18,4 @@ class ListaDeDivida extends Model
         'valor'
     ];
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'id' => 'integer',
-        'usuario_id' => 'integer',
-        'descricao' => 'string'
-    ];
 }

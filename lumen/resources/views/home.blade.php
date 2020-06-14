@@ -8,7 +8,7 @@
             </div>
             <div class="col-md-3">
                 <button type="button" class="btn btn-success pull-right"
-                onclick="syncBases()">
+                        onclick="syncBases()">
                     <i class="fa fa-refresh" aria-hidden="true"></i> Sincronizar
                 </button>
             </div>
@@ -31,7 +31,7 @@
                     <td>{{ $usuario->nome }}</td>
                     <td>{{ $usuario->cpf }}</td>
                     <td>{{ $usuario->idade }}</td>
-                    <td>{{ $usuario->ultima_consulta_cpf ? $usuario->ultima_consulta_cpf->format('d/m/Y H:i') : ''}}</td>
+                    <td>{{ $usuario->ultima_consulta_cpf ? with(new\Carbon\Carbon($usuario->ultima_consulta_cpf))->format('d/m/Y H:i') : ''}}</td>
                     <td>{{ $usuario->updated_at->format('d/m/Y H:i') }}</td>
                     <td>
                         <button type="button" class="btn btn-primary">

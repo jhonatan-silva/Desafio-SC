@@ -6,6 +6,7 @@ use App\Endereco;
 use App\FonteDeRenda;
 use App\ListaDeBem;
 use App\ListaDeDivida;
+use App\MovimentacaoFinanceira;
 use App\Repositories\ApiRepository;
 use App\Usuario;
 
@@ -26,8 +27,11 @@ class ApiController extends Controller
     public function syncBases()
     {
         $this->syncBaseA();
-        $this->syncBaseB();
-        $this->syncBaseC();
+
+        $usuarios = Usuario::get();
+
+        $this->syncBaseB($usuarios);
+        $this->syncBaseC($usuarios);
 
         return response()->json(['success' => true], 200);
     }
@@ -77,7 +81,7 @@ class ApiController extends Controller
         }
     }
 
-    public function syncBaseB()
+    public function syncBaseB($usuarios)
     {
         $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/b.json';
         $headers = [
@@ -85,8 +89,6 @@ class ApiController extends Controller
         ];
 
         $base_b = $this->apiRepository->connect($uri, $headers);
-
-        $usuarios = Usuario::get();
 
         foreach ($usuarios as $usuario) {
             if (isset($base_b[$usuario->cpf])) {
@@ -124,13 +126,34 @@ class ApiController extends Controller
 
     }
 
-    public function syncBaseC()
+    public function syncBaseC($usuarios)
     {
         $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/c.json';
         $headers = [
             'Content-Type' => 'application/json',
         ];
 
-        return $this->apiRepository->connect($uri, $headers);
+        $base_c = $this->apiRepository->connect($uri, $headers);
+
+        foreach ($usuarios as $usuario) {
+            if (isset($base_c[$usuario->cpf])) {
+                $item = $base_c[$usuario->cpf];
+
+                $usuario->update(['ultima_consulta_cpf' => $item['ultima_consulta_cpf']]);
+
+                foreach ($item['movimentacoes_financeiras'] as $lista_de_bem) {
+                    MovimentacaoFinanceira::updateOrCreate(
+                        [
+                            'usuario_id' => $usuario->id,
+                            'descricao' => $lista_de_bem['descricao']
+                        ],
+                        [
+                            'usuario_id' => $usuario->id,
+                            'descricao' => $lista_de_bem['descricao'],
+                            'valor' => $lista_de_bem['valor']
+                        ]);
+                }
+            }
+        }
     }
 }

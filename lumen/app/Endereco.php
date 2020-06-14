@@ -20,17 +20,4 @@ class Endereco extends Model
         'uf'
     ];
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'id' => 'integer',
-        'cep' => 'string',
-        'logradouro' => 'string',
-        'bairro' => 'string',
-        'cidade' => 'string',
-        'uf' => 'string'
-    ];
 }

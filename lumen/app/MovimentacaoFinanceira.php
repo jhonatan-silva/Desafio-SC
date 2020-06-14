@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ListaDeBem extends Model
+class MovimentacaoFinanceira extends Model
 {
-    public $table = 'lista_de_bens';
+    public $table = 'movimentacoes_financeiras';
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';

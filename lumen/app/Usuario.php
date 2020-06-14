@@ -20,17 +20,4 @@ class Usuario extends Model
         'ultima_consulta_cpf'
     ];
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'id' => 'integer',
-        'endereco_id' => 'integer',
-        'nome' => 'string',
-        'idade' => 'integer',
-        'cpf' => 'string',
-        'ultima_consulta_cpf' => 'dateTime'
-    ];
 }
