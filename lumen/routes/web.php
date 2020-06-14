@@ -11,6 +11,6 @@
 |
 */
 
-$router->get('/', 'HomeController@index');
+$router->get('/', 'UsuarioController@index');
 
 $router->get('/api/syncBases', 'ApiController@syncBases');

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Usuario;
 
-class HomeController extends Controller
+class UsuarioController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -20,6 +20,6 @@ class HomeController extends Controller
     {
         $usuarios = Usuario::get();
 
-        return view('home', compact('usuarios'));
+        return view('usuarios', compact('usuarios'));
     }
 }

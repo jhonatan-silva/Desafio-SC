@@ -9,6 +9,7 @@ use App\ListaDeDivida;
 use App\MovimentacaoFinanceira;
 use App\Repositories\ApiRepository;
 use App\Usuario;
+use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
@@ -26,134 +27,170 @@ class ApiController extends Controller
 
     public function syncBases()
     {
-        $this->syncBaseA();
+        if (!$this->syncBaseA()) {
+            return response()->json(['success' => false]);
+        }
 
         $usuarios = Usuario::get();
 
-        $this->syncBaseB($usuarios);
-        $this->syncBaseC($usuarios);
+        if (!$this->syncBaseB($usuarios)) {
+            return response()->json(['success' => false]);
+        }
 
-        return response()->json(['success' => true], 200);
+        if (!$this->syncBaseC($usuarios)) {
+            return response()->json(['success' => false]);
+        }
+
+        return response()->json(['success' => true]);
     }
 
     public function syncBaseA()
     {
-        $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/a.json';
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
+        DB::beginTransaction();
+        try {
+            $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/a.json';
+            $headers = [
+                'Content-Type' => 'application/json',
+            ];
 
-        $base_a = $this->apiRepository->connect($uri, $headers);
+            $base_a = $this->apiRepository->connect($uri, $headers);
 
-        foreach ($base_a as $item) {
-            $endereco = $item['endereco'];
+            foreach ($base_a as $item) {
+                $endereco = $item['endereco'];
 
-            $endereco_usuario = Endereco::updateOrCreate([
-                'cep' => $endereco['cep'],
-                'logradouro' => $endereco['logradouro'],
-                'bairro' => $endereco['bairro'],
-                'cidade' => $endereco['cidade'],
-                'uf' => $endereco['uf']
-            ]);
-
-            $usuario = Usuario::updateOrCreate(
-                [
-                    'cpf' => $item['cpf'],
-                ],
-                [
-                    'endereco_id' => $endereco_usuario->id,
-                    'nome' => $item['nome'],
-                    'cpf' => $item['cpf']
+                $endereco_usuario = Endereco::updateOrCreate([
+                    'cep' => $endereco['cep'],
+                    'logradouro' => $endereco['logradouro'],
+                    'bairro' => $endereco['bairro'],
+                    'cidade' => $endereco['cidade'],
+                    'uf' => $endereco['uf']
                 ]);
 
-            foreach ($item['lista_de_dividas'] as $lista_de_divida) {
-                ListaDeDivida::updateOrCreate(
+                $usuario = Usuario::updateOrCreate(
                     [
-                        'usuario_id' => $usuario->id,
-                        'descricao' => $lista_de_divida['descricao']
+                        'cpf' => $item['cpf'],
                     ],
                     [
-                        'usuario_id' => $usuario->id,
-                        'descricao' => $lista_de_divida['descricao'],
-                        'valor' => $lista_de_divida['valor']
+                        'endereco_id' => $endereco_usuario->id,
+                        'nome' => $item['nome'],
+                        'cpf' => $item['cpf']
                     ]);
+
+                foreach ($item['lista_de_dividas'] as $lista_de_divida) {
+                    ListaDeDivida::updateOrCreate(
+                        [
+                            'usuario_id' => $usuario->id,
+                            'descricao' => $lista_de_divida['descricao']
+                        ],
+                        [
+                            'usuario_id' => $usuario->id,
+                            'descricao' => $lista_de_divida['descricao'],
+                            'valor' => $lista_de_divida['valor']
+                        ]);
+                }
             }
+            DB::commit();
+
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollback();
+
+            return false;
         }
     }
 
     public function syncBaseB($usuarios)
     {
-        $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/b.json';
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
+        DB::beginTransaction();
+        try {
+            $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/b.json';
+            $headers = [
+                'Content-Type' => 'application/json',
+            ];
 
-        $base_b = $this->apiRepository->connect($uri, $headers);
+            $base_b = $this->apiRepository->connect($uri, $headers);
 
-        foreach ($usuarios as $usuario) {
-            if (isset($base_b[$usuario->cpf])) {
-                $item = $base_b[$usuario->cpf];
+            foreach ($usuarios as $usuario) {
+                if (isset($base_b[$usuario->cpf])) {
+                    $item = $base_b[$usuario->cpf];
 
-                $usuario->update(['idade' => $item['idade']]);
+                    $usuario->update(['idade' => $item['idade']]);
 
-                foreach ($item['lista_de_bens'] as $lista_de_bem) {
-                    ListaDeBem::updateOrCreate(
-                        [
-                            'usuario_id' => $usuario->id,
-                            'descricao' => $lista_de_bem['descricao']
-                        ],
-                        [
-                            'usuario_id' => $usuario->id,
-                            'descricao' => $lista_de_bem['descricao'],
-                            'valor' => $lista_de_bem['valor']
-                        ]);
-                }
+                    foreach ($item['lista_de_bens'] as $lista_de_bem) {
+                        ListaDeBem::updateOrCreate(
+                            [
+                                'usuario_id' => $usuario->id,
+                                'descricao' => $lista_de_bem['descricao']
+                            ],
+                            [
+                                'usuario_id' => $usuario->id,
+                                'descricao' => $lista_de_bem['descricao'],
+                                'valor' => $lista_de_bem['valor']
+                            ]);
+                    }
 
-                foreach ($item['fontes_de_rendas'] as $fonte_de_renda) {
-                    FonteDeRenda::updateOrCreate(
-                        [
-                            'usuario_id' => $usuario->id,
-                            'descricao' => $fonte_de_renda['descricao']
-                        ],
-                        [
-                            'usuario_id' => $usuario->id,
-                            'descricao' => $fonte_de_renda['descricao'],
-                            'valor' => $fonte_de_renda['valor']
-                        ]);
+                    foreach ($item['fontes_de_rendas'] as $fonte_de_renda) {
+                        FonteDeRenda::updateOrCreate(
+                            [
+                                'usuario_id' => $usuario->id,
+                                'descricao' => $fonte_de_renda['descricao']
+                            ],
+                            [
+                                'usuario_id' => $usuario->id,
+                                'descricao' => $fonte_de_renda['descricao'],
+                                'valor' => $fonte_de_renda['valor']
+                            ]);
+                    }
                 }
             }
-        }
+            DB::commit();
 
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollback();
+
+            return false;
+        }
     }
 
     public function syncBaseC($usuarios)
     {
-        $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/c.json';
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
+        DB::beginTransaction();
+        try {
+            $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/c.json';
+            $headers = [
+                'Content-Type' => 'application/json',
+            ];
 
-        $base_c = $this->apiRepository->connect($uri, $headers);
+            $base_c = $this->apiRepository->connect($uri, $headers);
 
-        foreach ($usuarios as $usuario) {
-            if (isset($base_c[$usuario->cpf])) {
-                $item = $base_c[$usuario->cpf];
+            foreach ($usuarios as $usuario) {
+                if (isset($base_c[$usuario->cpf])) {
+                    $item = $base_c[$usuario->cpf];
 
-                $usuario->update(['ultima_consulta_cpf' => $item['ultima_consulta_cpf']]);
+                    $usuario->update(['ultima_consulta_cpf' => $item['ultima_consulta_cpf']]);
 
-                foreach ($item['movimentacoes_financeiras'] as $lista_de_bem) {
-                    MovimentacaoFinanceira::updateOrCreate(
-                        [
-                            'usuario_id' => $usuario->id,
-                            'descricao' => $lista_de_bem['descricao']
-                        ],
-                        [
-                            'usuario_id' => $usuario->id,
-                            'descricao' => $lista_de_bem['descricao'],
-                            'valor' => $lista_de_bem['valor']
-                        ]);
+                    foreach ($item['movimentacoes_financeiras'] as $lista_de_bem) {
+                        MovimentacaoFinanceira::updateOrCreate(
+                            [
+                                'usuario_id' => $usuario->id,
+                                'descricao' => $lista_de_bem['descricao']
+                            ],
+                            [
+                                'usuario_id' => $usuario->id,
+                                'descricao' => $lista_de_bem['descricao'],
+                                'valor' => $lista_de_bem['valor']
+                            ]);
+                    }
                 }
             }
+            DB::commit();
+
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollback();
+
+            return false;
         }
     }
 }
