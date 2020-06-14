@@ -7,7 +7,8 @@
                 <h4>Listagem de usuários</h4>
             </div>
             <div class="col-md-3">
-                <button type="button" class="btn btn-success pull-right">
+                <button type="button" class="btn btn-success pull-right"
+                onclick="syncBases()">
                     <i class="fa fa-refresh" aria-hidden="true"></i> Sincronizar
                 </button>
             </div>
@@ -49,6 +50,21 @@
         $(function () {
             $('#datatable').DataTable();
         });
+
+        function syncBases() {
+            startLoading();
+            $.ajax({
+                url: '/api/syncBases',
+                type: 'GET'
+            }).done(function (data) {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    stopLoading();
+                    alert('Houve um erro ao sincronizar com as bases externas')
+                }
+            });
+        }
     </script>
 @endsection
 

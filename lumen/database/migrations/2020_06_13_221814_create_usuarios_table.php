@@ -18,7 +18,7 @@ class CreateUsuariosTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('endereco_id')->nullable();
             $table->string('nome');
-            $table->integer('idade');
+            $table->integer('idade')->nullable();
             $table->string('cpf');
             $table->dateTime('ultima_consulta_cpf')->nullable();
             $table->timestamps();
