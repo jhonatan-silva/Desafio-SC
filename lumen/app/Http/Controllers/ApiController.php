@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DadosUltimaCompraCartaoCredito;
 use App\Endereco;
 use App\FonteDeRenda;
 use App\ListaDeBem;
@@ -27,21 +28,27 @@ class ApiController extends Controller
 
     public function syncBases()
     {
-        if (!$this->syncBaseA()) {
-            return response()->json(['success' => false]);
+        $sync_base_a = $this->syncBaseA();
+
+        if (!$sync_base_a['success']) {
+            return response()->json(['success' => false, 'message' => $sync_base_a['message']]);
         }
 
         $usuarios = Usuario::get();
 
-        if (!$this->syncBaseB($usuarios)) {
-            return response()->json(['success' => false]);
+        $sync_base_b = $this->syncBaseB($usuarios);
+
+        if (!$sync_base_b['success']) {
+            return response()->json(['success' => false, 'message' => $sync_base_b['message']]);
         }
 
-        if (!$this->syncBaseC($usuarios)) {
-            return response()->json(['success' => false]);
+        $sync_base_c = $this->syncBaseC($usuarios);
+
+        if (!$sync_base_c['success']) {
+            return response()->json(['success' => false, 'message' => $sync_base_c['message']]);
         }
 
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true, 'message' => 'Sucesso']);
     }
 
     public function syncBaseA()
@@ -91,11 +98,11 @@ class ApiController extends Controller
             }
             DB::commit();
 
-            return true;
+            return ['success' => true, 'message' => 'Sucesso'];
         } catch (\Exception $exception) {
             DB::rollback();
 
-            return false;
+            return ['success' => false, 'message' => $exception->getMessage() . ' na linha: ' . $exception->getLine()];
         }
     }
 
@@ -145,11 +152,11 @@ class ApiController extends Controller
             }
             DB::commit();
 
-            return true;
+            return ['success' => true, 'message' => 'Sucesso'];
         } catch (\Exception $exception) {
             DB::rollback();
 
-            return false;
+            return ['success' => false, 'message' => $exception->getMessage() . ' na linha: ' . $exception->getLine()];
         }
     }
 
@@ -182,15 +189,33 @@ class ApiController extends Controller
                                 'valor' => $lista_de_bem['valor']
                             ]);
                     }
+
+                    $dados_ultima_compra_cartao_credito = $item['dados_ultima_compra_cartao_credito'];
+
+                    DadosUltimaCompraCartaoCredito::updateOrCreate(
+                        [
+                            'usuario_id' => $usuario->id,
+                            'bandeira' => $dados_ultima_compra_cartao_credito['bandeira'],
+                            'numero' => $dados_ultima_compra_cartao_credito['numero'],
+                        ],
+                        [
+                            'usuario_id' => $usuario->id,
+                            'bandeira' => $dados_ultima_compra_cartao_credito['bandeira'],
+                            'numero' => $dados_ultima_compra_cartao_credito['numero'],
+                            'vencimento' => $dados_ultima_compra_cartao_credito['vencimento'],
+                            'valor' => $dados_ultima_compra_cartao_credito['valor']
+                        ]
+                    );
+
                 }
             }
             DB::commit();
 
-            return true;
+            return ['success' => true, 'message' => 'Sucesso'];
         } catch (\Exception $exception) {
             DB::rollback();
 
-            return false;
+            return ['success' => false, 'message' => $exception->getMessage() . ' na linha: ' . $exception->getLine()];
         }
     }
 }

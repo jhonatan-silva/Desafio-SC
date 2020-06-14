@@ -60,6 +60,14 @@ class Usuario extends Model
         return $this->hasMany(MovimentacaoFinanceira::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     **/
+    public function dadoUltimaCompraCartaoCredito()
+    {
+        return $this->hasOne(DadosUltimaCompraCartaoCredito::class);
+    }
+
     public function getUltimaConsultaCpfAttribute($value)
     {
         return $value ? with(new\Carbon\Carbon($value))->format('d/m/Y H:i') : '';

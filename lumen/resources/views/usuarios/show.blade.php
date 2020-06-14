@@ -13,8 +13,8 @@
             </div>
         </div>
 
-        <div class="card row" onclick="toggle('informacoes')" style="cursor: pointer">
-            <div class="card-header">
+        <div class="card row">
+            <div class="card-header" onclick="toggle('informacoes')" style="cursor: pointer">
                 Informações
             </div>
             <div class="row col-md-12" id="informacoes">
@@ -48,8 +48,8 @@
         </div>
         @if($usuario->endereco)
             <br>
-            <div class="card row" onclick="toggle('endereco')" style="cursor: pointer">
-                <div class="card-header">
+            <div class="card row">
+                <div class="card-header" onclick="toggle('endereco')" style="cursor: pointer">
                     Endereço
                 </div>
                 <div class="row col-md-12" id="endereco" style="display: none;">
@@ -57,7 +57,7 @@
                         <label>CEP</label>
                         <p class="form-control">{!! $usuario->endereco->cep !!}</p>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-8">
                         <label>Logradouro</label>
                         <p class="form-control">{!! $usuario->endereco->logradouro !!}</p>
                     </div>
@@ -76,60 +76,92 @@
                 </div>
             </div>
         @endif
-        <br>
-        <div class="card row" onclick="toggle('lista_de_dividas')" style="cursor: pointer">
-            <div class="card-header">
-                Lista de dívidas
+        @if(count($usuario->listaDeDividas))
+            <br>
+            <div class="card row">
+                <div class="card-header" onclick="toggle('lista_de_dividas')" style="cursor: pointer">
+                    Lista de dívidas
+                </div>
+                <div class="row col-md-12" id="lista_de_dividas" style="display: none;">
+                    @foreach($usuario->listaDeDividas as $lista_de_divida)
+                        <div class="form-group col-md-6">
+                            <label>Descrição</label>
+                            <p class="form-control">{!! $lista_de_divida->descricao !!}</p>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Valor</label>
+                            <p class="form-control">{!! $lista_de_divida->valor !!}</p>
+                        </div>
+                    @endforeach
+                </div>
             </div>
-            <div class="row col-md-12" id="lista_de_dividas" style="display: none;">
-                @foreach($usuario->listaDeDividas as $lista_de_divida)
-                    <div class="form-group col-md-6">
-                        <label>Descrição</label>
-                        <p class="form-control">{!! $lista_de_divida->descricao !!}</p>
+        @endif
+        @if(count($usuario->fontesDeRendas))
+            <br>
+            <div class="card row">
+                <div class="card-header" onclick="toggle('fontes_de_renda')" style="cursor: pointer">
+                    Fontes de renda
+                </div>
+                <div class="row col-md-12" id="fontes_de_renda" style="display: none;">
+                    @foreach($usuario->fontesDeRendas as $fonte_de_renda)
+                        <div class="form-group col-md-6">
+                            <label>Descrição</label>
+                            <p class="form-control">{!! $fonte_de_renda->descricao !!}</p>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Valor</label>
+                            <p class="form-control">{!! $fonte_de_renda->valor !!}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+        @if(count($usuario->movimentacoesFinanceiras))
+            <br>
+            <div class="card row">
+                <div class="card-header" onclick="toggle('movimentacoes_financeiras')" style="cursor: pointer">
+                    Movimentações financeiras
+                </div>
+                <div class="row col-md-12" id="movimentacoes_financeiras" style="display: none;">
+                    @foreach($usuario->movimentacoesFinanceiras as $movimentacao_financeira)
+                        <div class="form-group col-md-6">
+                            <label>Descrição</label>
+                            <p class="form-control">{!! $movimentacao_financeira->descricao !!}</p>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Valor</label>
+                            <p class="form-control">{!! $movimentacao_financeira->valor !!}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+        @if($usuario->dadoUltimaCompraCartaoCredito)
+            <br>
+            <div class="card row">
+                <div class="card-header" onclick="toggle('dado_ultima_compra_cartao_credito')" style="cursor: pointer">
+                    Dados da última compra com cartao de crédito
+                </div>
+                <div class="row col-md-12" id="dado_ultima_compra_cartao_credito" style="display: none;">
+                    <div class="form-group col-md-3">
+                        <label>Bandeira</label>
+                        <p class="form-control">{!! $usuario->dadoUltimaCompraCartaoCredito->bandeira !!}</p>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-3">
+                        <label>Número</label>
+                        <p class="form-control">{!! $usuario->dadoUltimaCompraCartaoCredito->numero !!}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>Vencimento</label>
+                        <p class="form-control">{!! $usuario->dadoUltimaCompraCartaoCredito->vencimento !!}</p>
+                    </div>
+                    <div class="form-group col-md-3">
                         <label>Valor</label>
-                        <p class="form-control">{!! $lista_de_divida->valor !!}</p>
+                        <p class="form-control">{!! $usuario->dadoUltimaCompraCartaoCredito->valor !!}</p>
                     </div>
-                @endforeach
+                </div>
             </div>
-        </div>
-        <br>
-        <div class="card row" onclick="toggle('fontes_de_renda')" style="cursor: pointer">
-            <div class="card-header">
-                Fontes de renda
-            </div>
-            <div class="row col-md-12" id="fontes_de_renda" style="display: none;">
-                @foreach($usuario->fontesDeRendas as $fonte_de_renda)
-                    <div class="form-group col-md-6">
-                        <label>Descrição</label>
-                        <p class="form-control">{!! $fonte_de_renda->descricao !!}</p>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Valor</label>
-                        <p class="form-control">{!! $fonte_de_renda->valor !!}</p>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-        <br>
-        <div class="card row" onclick="toggle('movimentacoes_financeiras')" style="cursor: pointer">
-            <div class="card-header">
-                Movimentações financeiras
-            </div>
-            <div class="row col-md-12" id="movimentacoes_financeiras" style="display: none;">
-                @foreach($usuario->movimentacoesFinanceiras as $movimentacao_financeira)
-                    <div class="form-group col-md-6">
-                        <label>Descrição</label>
-                        <p class="form-control">{!! $movimentacao_financeira->descricao !!}</p>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Valor</label>
-                        <p class="form-control">{!! $movimentacao_financeira->valor !!}</p>
-                    </div>
-                @endforeach
-            </div>
-        </div>
+        @endif
     </div>
 @endsection
 

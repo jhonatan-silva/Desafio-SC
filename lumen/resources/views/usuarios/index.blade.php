@@ -61,7 +61,7 @@
                     location.reload();
                 } else {
                     stopLoading();
-                    alert('Houve um erro ao sincronizar com as bases externas')
+                    alert(data.message)
                 }
             });
         }
