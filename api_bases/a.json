@@ -1,19 +1,35 @@
-{
-  "cpf": "18447782581",
-  "nome": "João da Silva",
-  "endereco": {
-    "cep": "01001000",
-    "logradouro": "Praça da Sé",
-    "numero": "1854",
-    "complemento": "lado ímpar",
-    "bairro": "Sé",
-    "cidade": "São Paulo",
-    "uf": "SP"
+[
+  {
+    "cpf": "18447782581",
+    "nome": "João da Silva",
+    "endereco": {
+      "cep": "01001000",
+      "logradouro": "Praça da Sé",
+      "numero": "1854",
+      "complemento": "lado ímpar",
+      "bairro": "Sé",
+      "cidade": "São Paulo",
+      "uf": "SP"
+    },
+    "lista_de_dividas": [
+      {
+        "descricao": "Cartões",
+        "valor": 1200
+      }
+    ]
   },
-  "lista_de_dividas": [
-    {
-      "descricao": "Cartões",
-      "valor": 1200
-    }
-  ]
-}
+  {
+    "cpf": "12465734565",
+    "nome": "Maria da Silva",
+    "endereco": {
+      "cep": "01001000",
+      "logradouro": "Praça da Sé",
+      "numero": "1854",
+      "complemento": "lado ímpar",
+      "bairro": "Sé",
+      "cidade": "São Paulo",
+      "uf": "SP"
+    },
+    "lista_de_dividas": []
+  }
+]
