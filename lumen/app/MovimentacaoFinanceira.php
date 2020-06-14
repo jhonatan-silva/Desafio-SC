@@ -18,4 +18,8 @@ class MovimentacaoFinanceira extends Model
         'valor'
     ];
 
+    public function getValorAttribute($value)
+    {
+        return 'R$ ' . number_format(round($value, 2), 2, ',', '.');
+    }
 }

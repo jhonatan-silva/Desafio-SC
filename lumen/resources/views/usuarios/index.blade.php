@@ -31,12 +31,12 @@
                     <td>{{ $usuario->nome }}</td>
                     <td>{{ $usuario->cpf }}</td>
                     <td>{{ $usuario->idade }}</td>
-                    <td>{{ $usuario->ultima_consulta_cpf ? with(new\Carbon\Carbon($usuario->ultima_consulta_cpf))->format('d/m/Y H:i') : ''}}</td>
+                    <td>{{ $usuario->ultima_consulta_cpf}}</td>
                     <td>{{ $usuario->updated_at->format('d/m/Y H:i') }}</td>
                     <td>
-                        <button type="button" class="btn btn-primary">
+                        <a href="/usuario/{{$usuario->id}}" class="btn btn-primary">
                             <i class="fa fa-eye" aria-hidden="true"></i>
-                        </button>
+                        </a>
                     </td>
                 </tr>
             @endforeach

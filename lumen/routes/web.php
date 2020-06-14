@@ -12,5 +12,6 @@
 */
 
 $router->get('/', 'UsuarioController@index');
+$router->get('/usuario/{id}', 'UsuarioController@show');
 
 $router->get('/api/syncBases', 'ApiController@syncBases');

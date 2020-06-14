@@ -20,6 +20,13 @@ class UsuarioController extends Controller
     {
         $usuarios = Usuario::get();
 
-        return view('usuarios', compact('usuarios'));
+        return view('usuarios.index', compact('usuarios'));
+    }
+
+    public function show($id)
+    {
+        $usuario = Usuario::find($id);
+
+        return view('usuarios.show', compact('usuario'));
     }
 }

@@ -20,4 +20,48 @@ class Usuario extends Model
         'ultima_consulta_cpf'
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function endereco()
+    {
+        return $this->belongsTo(Endereco::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function listaDeDividas()
+    {
+        return $this->hasMany(ListaDeDivida::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function listaDeBens()
+    {
+        return $this->hasMany(ListaDeBem::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function fontesDeRendas()
+    {
+        return $this->hasMany(FonteDeRenda::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function movimentacoesFinanceiras()
+    {
+        return $this->hasMany(MovimentacaoFinanceira::class);
+    }
+
+    public function getUltimaConsultaCpfAttribute($value)
+    {
+        return $value ? with(new\Carbon\Carbon($value))->format('d/m/Y H:i') : '';
+    }
 }
