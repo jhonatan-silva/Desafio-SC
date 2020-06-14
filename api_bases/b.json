@@ -1,30 +1,56 @@
-{
-  "idade": 38,
-  "lista_de_bens": [
-    {
-      "descricao": "Casa",
-      "valor": 400000
+[
+  {
+    "cpf": "18447782581",
+    "idade": 38,
+    "lista_de_bens": [
+      {
+        "descricao": "Casa",
+        "valor": 400000
+      },
+      {
+        "descricao": "Carro",
+        "valor": 35000
+      }
+    ],
+    "endereco": {
+      "cep": "01001000",
+      "logradouro": "Praça da Sé",
+      "bairro": "Sé",
+      "cidade": "São Paulo",
+      "uf": "SP"
     },
-    {
-      "descricao": "Carro",
-      "valor": 35000
-    }
-  ],
-  "endereco": {
-    "cep": "01001000",
-    "logradouro": "Praça da Sé",
-    "bairro": "Sé",
-    "cidade": "São Paulo",
-    "uf": "SP"
+    "fontes_de_rendas": [
+      {
+        "descricao": "Salário",
+        "valor": 7000
+      },
+      {
+        "descricao": "Dividendos",
+        "valor": 1000
+      }
+    ]
   },
-  "fontes_de_renda": [
-    {
-      "descricao": "Salário",
-      "valor": 7000
+  {
+    "cpf": "12465734565",
+    "idade": 36,
+    "lista_de_bens": [
+      {
+        "descricao": "Carro",
+        "valor": 40000
+      }
+    ],
+    "endereco": {
+      "cep": "01001000",
+      "logradouro": "Praça da Sé",
+      "bairro": "Sé",
+      "cidade": "São Paulo",
+      "uf": "SP"
     },
-    {
-      "descricao": "Dividendos",
-      "valor": 1000
-    }
-  ]
-}
+    "fontes_de_rendas": [
+      {
+        "descricao": "Salário",
+        "valor": 7500
+      }
+    ]
+  }
+]
