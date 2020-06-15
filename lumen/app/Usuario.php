@@ -65,7 +65,7 @@ class Usuario extends Model
      **/
     public function dadoUltimaCompraCartaoCredito()
     {
-        return $this->hasOne(DadosUltimaCompraCartaoCredito::class);
+        return $this->hasOne(UltimaCompraDados::class);
     }
 
     public function getUltimaConsultaCpfAttribute($value)

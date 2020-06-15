@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DadosUltimaCompraCartaoCredito extends Model
+class UltimaCompraDados extends Model
 {
-    public $table = 'dados_ultima_compra_cartao_credito';
+    public $table = 'ultima_compra_dados';
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';

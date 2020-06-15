@@ -2,30 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\DadosUltimaCompraCartaoCredito;
-use App\Endereco;
-use App\FonteDeRenda;
-use App\ListaDeBem;
-use App\ListaDeDivida;
-use App\MovimentacaoFinanceira;
 use App\Repositories\ApiRepository;
+use App\Repositories\UltimaCompraDadosRepository;
+use App\Repositories\EnderecoRepository;
+use App\Repositories\FonteDeRendaRepository;
+use App\Repositories\ListaDeBemRepository;
+use App\Repositories\ListaDeDividaRepository;
+use App\Repositories\MovimentacaoFinanceiraRepository;
+use App\Repositories\UsuarioRepository;
 use App\Usuario;
 use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
     protected $apiRepository;
+    protected $enderecoRepository;
+    protected $usuarioRepository;
+    protected $listaDeDividaRepository;
+    protected $listaDeBemRepository;
+    protected $fonteDeRendaRepository;
+    protected $movimentacaoFinanceiraRepository;
+    protected $ultimaCompraDadosRepository;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(ApiRepository $apiRepository)
-    {
+    public function __construct(
+        ApiRepository $apiRepository,
+        EnderecoRepository $enderecoRepository,
+        UsuarioRepository $usuarioRepository,
+        ListaDeDividaRepository $listaDeDividaRepository,
+        ListaDeBemRepository $listaDeBemRepository,
+        FonteDeRendaRepository $fonteDeRendaRepository,
+        MovimentacaoFinanceiraRepository $movimentacaoFinanceiraRepository,
+        UltimaCompraDadosRepository $ultimaCompraDadosRepository
+    ) {
         $this->apiRepository = $apiRepository;
+        $this->enderecoRepository = $enderecoRepository;
+        $this->usuarioRepository = $usuarioRepository;
+        $this->listaDeDividaRepository = $listaDeDividaRepository;
+        $this->listaDeBemRepository = $listaDeBemRepository;
+        $this->fonteDeRendaRepository = $fonteDeRendaRepository;
+        $this->movimentacaoFinanceiraRepository = $movimentacaoFinanceiraRepository;
+        $this->ultimaCompraDadosRepository = $ultimaCompraDadosRepository;
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function syncBases()
     {
         $sync_base_a = $this->syncBaseA();
@@ -51,6 +77,9 @@ class ApiController extends Controller
         return response()->json(['success' => true, 'message' => 'Sucesso']);
     }
 
+    /**
+     * @return array
+     */
     public function syncBaseA()
     {
         DB::beginTransaction();
@@ -58,45 +87,21 @@ class ApiController extends Controller
             $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/a.json';
             $headers = [
                 'Content-Type' => 'application/json',
-//                'Authorization' => 'Bearer 1a59asb34dhta923b347g7f2g3b543g632765j41'
+                // 'Authorization' => 'Bearer 1a59asb34dhta923b347g7f2g3b543g632765j41'
             ];
 
             $base_a = $this->apiRepository->connect($uri, $headers);
 
             foreach ($base_a as $item) {
-                $endereco = $item['endereco'];
+                $endereco = $this->enderecoRepository->save($item['endereco']);
 
-                $endereco_usuario = Endereco::updateOrCreate([
-                    'cep' => $endereco['cep'],
-                    'logradouro' => $endereco['logradouro'],
-                    'bairro' => $endereco['bairro'],
-                    'cidade' => $endereco['cidade'],
-                    'uf' => $endereco['uf']
-                ]);
-
-                $usuario = Usuario::updateOrCreate(
-                    [
-                        'cpf' => $item['cpf'],
-                    ],
-                    [
-                        'endereco_id' => $endereco_usuario->id,
-                        'nome' => $item['nome'],
-                        'cpf' => $item['cpf']
-                    ]);
+                $usuario = $this->usuarioRepository->save($item, $endereco->id);
 
                 foreach ($item['lista_de_dividas'] as $lista_de_divida) {
-                    ListaDeDivida::updateOrCreate(
-                        [
-                            'usuario_id' => $usuario->id,
-                            'descricao' => $lista_de_divida['descricao']
-                        ],
-                        [
-                            'usuario_id' => $usuario->id,
-                            'descricao' => $lista_de_divida['descricao'],
-                            'valor' => $lista_de_divida['valor']
-                        ]);
+                    $this->listaDeDividaRepository->save($lista_de_divida, $usuario->id);
                 }
             }
+
             DB::commit();
 
             return ['success' => true, 'message' => 'Sucesso'];
@@ -107,6 +112,10 @@ class ApiController extends Controller
         }
     }
 
+    /**
+     * @param $usuarios
+     * @return array
+     */
     public function syncBaseB($usuarios)
     {
         DB::beginTransaction();
@@ -114,7 +123,7 @@ class ApiController extends Controller
             $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/b.json';
             $headers = [
                 'Content-Type' => 'application/json',
-//                'Authorization' => 'Bearer 1a59asb34dhta923b347g7f2g3b543g632765j41'
+                // 'Authorization' => 'Bearer 1a59asb34dhta923b347g7f2g3b543g632765j41'
             ];
 
             $base_b = $this->apiRepository->connect($uri, $headers);
@@ -126,29 +135,12 @@ class ApiController extends Controller
                     $usuario->update(['idade' => $item['idade']]);
 
                     foreach ($item['lista_de_bens'] as $lista_de_bem) {
-                        ListaDeBem::updateOrCreate(
-                            [
-                                'usuario_id' => $usuario->id,
-                                'descricao' => $lista_de_bem['descricao']
-                            ],
-                            [
-                                'usuario_id' => $usuario->id,
-                                'descricao' => $lista_de_bem['descricao'],
-                                'valor' => $lista_de_bem['valor']
-                            ]);
+                        $this->listaDeBemRepository->save($lista_de_bem, $usuario->id);
                     }
 
                     foreach ($item['fontes_de_rendas'] as $fonte_de_renda) {
-                        FonteDeRenda::updateOrCreate(
-                            [
-                                'usuario_id' => $usuario->id,
-                                'descricao' => $fonte_de_renda['descricao']
-                            ],
-                            [
-                                'usuario_id' => $usuario->id,
-                                'descricao' => $fonte_de_renda['descricao'],
-                                'valor' => $fonte_de_renda['valor']
-                            ]);
+                        $this->listaDeBemRepository->save($fonte_de_renda, $usuario->id);
+
                     }
                 }
             }
@@ -162,6 +154,10 @@ class ApiController extends Controller
         }
     }
 
+    /**
+     * @param $usuarios
+     * @return array
+     */
     public function syncBaseC($usuarios)
     {
         DB::beginTransaction();
@@ -169,7 +165,7 @@ class ApiController extends Controller
             $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/c.json';
             $headers = [
                 'Content-Type' => 'application/json',
-//                'Authorization' => 'Bearer 1a59asb34dhta923b347g7f2g3b543g632765j41'
+                // 'Authorization' => 'Bearer 1a59asb34dhta923b347g7f2g3b543g632765j41'
             ];
 
             $base_c = $this->apiRepository->connect($uri, $headers);
@@ -180,36 +176,11 @@ class ApiController extends Controller
 
                     $usuario->update(['ultima_consulta_cpf' => $item['ultima_consulta_cpf']]);
 
-                    foreach ($item['movimentacoes_financeiras'] as $lista_de_bem) {
-                        MovimentacaoFinanceira::updateOrCreate(
-                            [
-                                'usuario_id' => $usuario->id,
-                                'descricao' => $lista_de_bem['descricao']
-                            ],
-                            [
-                                'usuario_id' => $usuario->id,
-                                'descricao' => $lista_de_bem['descricao'],
-                                'valor' => $lista_de_bem['valor']
-                            ]);
+                    foreach ($item['movimentacoes_financeiras'] as $movimentacao_financeira) {
+                        $this->movimentacaoFinanceiraRepository->save($movimentacao_financeira, $usuario->id);
                     }
 
-                    $dados_ultima_compra_cartao_credito = $item['dados_ultima_compra_cartao_credito'];
-
-                    DadosUltimaCompraCartaoCredito::updateOrCreate(
-                        [
-                            'usuario_id' => $usuario->id,
-                            'bandeira' => $dados_ultima_compra_cartao_credito['bandeira'],
-                            'numero' => $dados_ultima_compra_cartao_credito['numero'],
-                        ],
-                        [
-                            'usuario_id' => $usuario->id,
-                            'bandeira' => $dados_ultima_compra_cartao_credito['bandeira'],
-                            'numero' => $dados_ultima_compra_cartao_credito['numero'],
-                            'vencimento' => $dados_ultima_compra_cartao_credito['vencimento'],
-                            'valor' => $dados_ultima_compra_cartao_credito['valor']
-                        ]
-                    );
-
+                    $this->ultimaCompraDadosRepository->save($item['dados_ultima_compra_cartao_credito'], $usuario->id);
                 }
             }
             DB::commit();

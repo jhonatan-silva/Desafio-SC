@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDadosUltimaCompraCartaoCreditoTable extends Migration
+class CreateUltimaCompraDadosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDadosUltimaCompraCartaoCreditoTable extends Migration
      */
     public function up()
     {
-        Schema::create('dados_ultima_compra_cartao_credito', function (Blueprint $table) {
+        Schema::create('ultima_compra_dados', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->unsignedInteger('usuario_id');
@@ -37,6 +37,6 @@ class CreateDadosUltimaCompraCartaoCreditoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dados_ultima_compra_cartao_credito');
+        Schema::dropIfExists('ultima_compra_dados');
     }
 }

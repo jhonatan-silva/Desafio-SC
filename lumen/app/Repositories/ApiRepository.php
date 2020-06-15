@@ -7,6 +7,11 @@ use GuzzleHttp\Exception\RequestException;
 
 class ApiRepository
 {
+    /**
+     * @param $uri
+     * @param $headers
+     * @return mixed|\Psr\Http\Message\ResponseInterface|string
+     */
     public function connect($uri, $headers)
     {
         $client = new Client();
