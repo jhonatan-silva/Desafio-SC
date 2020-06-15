@@ -21,7 +21,7 @@
                 <th>CPF</th>
                 <th>Idade</th>
                 <th>Última consulta CPF</th>
-                <th>Última sincronização</th>
+                <th>Atualizado em</th>
                 <th width="5%">Ações</th>
             </tr>
             </thead>
@@ -34,7 +34,7 @@
                     <td>{{ $usuario->ultima_consulta_cpf}}</td>
                     <td>{{ $usuario->updated_at->format('d/m/Y H:i') }}</td>
                     <td>
-                        <a href="/usuario/{{$usuario->id}}" class="btn btn-primary">
+                        <a href="/usuario/{{$usuario->id}}" class="btn btn-primary" onclick="startLoading();">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                         </a>
                     </td>

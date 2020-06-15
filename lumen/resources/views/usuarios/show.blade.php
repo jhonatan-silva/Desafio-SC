@@ -7,7 +7,7 @@
                 <h4>Detalhes do usuário {{$usuario->nome}}</h4>
             </div>
             <div class="col-md-3">
-                <a href="/" class="btn btn-info pull-right">
+                <a href="/" class="btn btn-info pull-right" onclick="startLoading();">
                     <i class="fa fa-chevron-left" aria-hidden="true"></i> Voltar
                 </a>
             </div>
