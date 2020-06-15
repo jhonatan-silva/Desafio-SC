@@ -58,6 +58,7 @@ class ApiController extends Controller
             $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/a.json';
             $headers = [
                 'Content-Type' => 'application/json',
+//                'Authorization' => 'Bearer 1a59asb34dhta923b347g7f2g3b543g632765j41'
             ];
 
             $base_a = $this->apiRepository->connect($uri, $headers);
@@ -113,6 +114,7 @@ class ApiController extends Controller
             $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/b.json';
             $headers = [
                 'Content-Type' => 'application/json',
+//                'Authorization' => 'Bearer 1a59asb34dhta923b347g7f2g3b543g632765j41'
             ];
 
             $base_b = $this->apiRepository->connect($uri, $headers);
@@ -167,6 +169,7 @@ class ApiController extends Controller
             $uri = 'https://raw.githubusercontent.com/jhonatan-silva/desafio_sc/master/api_bases/c.json';
             $headers = [
                 'Content-Type' => 'application/json',
+//                'Authorization' => 'Bearer 1a59asb34dhta923b347g7f2g3b543g632765j41'
             ];
 
             $base_c = $this->apiRepository->connect($uri, $headers);
